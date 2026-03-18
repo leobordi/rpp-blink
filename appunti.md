@@ -12,15 +12,17 @@ Una volta modificato il RESET bisogna aspettare qualche ciclo di clock perchè l
 ### GPIO FUNCSEL SIO
 
 Ogni GPIO può avere 1 funzione selezionata alla volta, a me serve la funzione 5 del GPIO 25 che sarebbe la funzione SIO.
-A quanto pare devo agire sul registro IO_BANK0 (da 0x40014000). GIPIO25_CTRL è a offset 0x0cc:
+A quanto pare devo agire su IO_BANK0 (da 0x40014000). GIPIO25_CTRL è a offset 0x0cc:
 i primi 4 bit servono per selezionare la funzione, in teoria il resto non devo modificarlo perchè il default mi va già bene.
 Quindi scrivo 5 (SIO è F5) nei primi 4 bit.
 Ora IO_BANK0 instraderà i segnali di GPIO_25 a SIO.
 
+### Scrittura su GPIO25
 
-### Collegamento SIO-GPIO
-
-Per poter fare cose su un GPIO bisogna prima collegarlo in qualche modo al SIO (Single-Cyle Input Output), un blocco di periferiche che può eseguire operazioni atomiche in tempi molto veloci (1 ciclo cpu). Ognuno dei due processori ARM Cortex-M0+ ha una bus port ausiliaria (chiamata IOPORT, può fare operazioni di lettura e scrittura veloci a 32-bit) per comunicare con il SIO, il SIO a sua volta ha una bus interface dedicata per ogni processore.
-I 2 processori accedono all'IOPORT con operazioni di load e store dirette al suo segmento speciale di indirizzi 0xd0000000-0xdfffffff. Nello spazio dell'IOPORT il SIO è memory-mapped perchè i suoi registri sono mappati da 0xd0000000 a 0xd000017c (da capire quanto è lunga una word perchè adesso non lo so), il rimanente spazio è riservato per uso futuro.
-
+Ora devo implementare il ciclo per blinkare il led.
+Avrò bisogno dei registri GPIO_OUT e GPIO_OE (questi registri contengono i valori di tutti i GPIO, dal momento che voglio modificare solo il GPIO25 userò i registri atomici GPIO_OUT_SET, GPIO_OUT_CLEAR e GPIO_OE_SET).
+Tutti i registri GPIO partono da 0xd0000000 (SIO_BASE):
+* GPIO_OUT_SET 0xd0000000 + 0x014
+* GPIO_OUT_CLEAR 0xd0000000 + 0x018
+* GPIO_OE_SET 0xd0000000 + 0x024
 
