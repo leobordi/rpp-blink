@@ -8,6 +8,11 @@ Il led integrato è controllabile dal GPIO 25.
 Dopo il boot quasi tutte le periferiche che usano il bus APB sono in reset, per usarne una bisogna de-resettarla settando a 0 il giusto bit nel registro RESET (parte da 0x4000c000) altrimenti il bus non fà passare i segnali.
 Il SIO non è in reset mode perchè ha un bus dedicato ma l'IO_BANK0 (multiplexer che smista i segnali tra periferiche e gpio) sì: per deresettarlo setto a 0 il bit 5 (sesto bit) del registro RESET.
 Una volta modificato il RESET bisogna aspettare qualche ciclo di clock perchè la periferica sia effettivamente pronta. Per controllare se la periferica è pronta devo leggere il registro RESET_DONE (0x8 di offset rispetto a 0x4000c000), se il bit 5, nel caso di IO_BANK0, è a 1 allora la periferica è pronta.
+Update: ogni registro delle periferiche può essere acceduto usando 4 modalità 2.1.2 rp2040 datasheet; a me interessa la modalità atomic bitmask clear on write (addr + 0x3000), che mette a 0 i bit che io metto a 1 dentro il registro, funziona proprio come un bitwise and tra una bitmask e il numero che voglio modificare, per modificare solo determinati bit nel numero originale. Meglio usare questa modalità perchè, oltre ad essere atomica, è meglio in sistemi multi core o interrupt
+
+Processo:
+	scrivo #32 in 0x4000f000
+
 
 ### GPIO FUNCSEL SIO
 
