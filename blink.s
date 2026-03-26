@@ -24,17 +24,28 @@ _reset_done:
 	lsl, r1, r1, #25	// Shifto a sinistra di 25 bit r1 e il risultato và in r1
 	str r1, [r0]		// Scrivo nel registro GPIO_OE_SET il contenuto di r1 (ho settato il bit 25 perchè voglio abilitare GPIO_25)
 
+	mov r3, 0x40060020
+	mov r4, #20
+
 _blink_loop:
 	// Setto HI GPIO_25
 	mov r0, 0xd0000014 	
 	str r1, [r0]
+	
+	str r4, [r3]
 	bl _delay
 
 	// Setto LOW GPIO_25
 	mov r0, 0xd0000018
 	str r1, [r0]
+	
+	str r4, [r3]
 	bl _delay
 
 	// Rifaccio il ciclo
 	b _blink_loop
 	
+_delay:
+	ldr r5, [r3]
+	cmp r5, #0
+	bne _delay
