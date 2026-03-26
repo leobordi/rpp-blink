@@ -31,3 +31,8 @@ Tutti i registri GPIO partono da 0xd0000000 (SIO_BASE):
 * GPIO_OUT_CLEAR 0xd0000000 + 0x018
 * GPIO_OE_SET 0xd0000000 + 0x024
 
+### Delay blink
+
+Per implementare il delay posso usare il ring oscillator integrato nell'rp2040.
+I suoi registri partono da 0x40060000; posso usare il registro COUNT (offset +0x20), se ci scrivo dentro un numero non-zero lui lo decrementa fino a 0 e poi si ferma.
+La frequenza con cui gira è proprio sua quindi può essere anche impostata tramite altri registri.
