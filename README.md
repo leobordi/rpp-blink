@@ -43,3 +43,8 @@ Devo usare quindi un semplice ciclo di decremento di un numero elevato.
 ### Compilazione
 
 Per compilare il file assembly ho dovuto usare l'SDK con cmake e make.
+
+### Note
+
+Ho scritto questo programma manualmente usando solo la documentazione ufficiale (rp2040 datasheet e Cortex-M0+ Devices Generic User Guide).
+Per controllare la correttezza/farmi spiegare alcune cose ho usato sonnet 5 webchat, l'ho usato in modalità "insegnante".
