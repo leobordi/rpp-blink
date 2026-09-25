@@ -34,5 +34,12 @@ Tutti i registri GPIO partono da 0xd0000000 (SIO_BASE):
 ### Delay blink
 
 Per implementare il delay posso usare il ring oscillator integrato nell'rp2040.
-I suoi registri partono da 0x40060000; posso usare il registro COUNT (offset +0x20), se ci scrivo dentro un numero non-zero lui lo decrementa fino a 0 e poi si ferma.
+I suoi registri partono da 0x40060000; posso usare il registro COUNT (offset +0x28), se ci scrivo dentro un numero non-zero lui lo decrementa fino a 0 e poi si ferma.
 La frequenza con cui gira è proprio sua quindi può essere anche impostata tramite altri registri.
+
+Quella sopra era l'idea iniziale, peccato che nel registro COUNT del ring oscillator, ci posso scrivere solo numeri a 8 bit che è troppo poco per un delay.
+Devo usare quindi un semplice ciclo di decremento di un numero elevato.
+
+### Compilazione
+
+Per compilare il file assembly ho dovuto usare l'SDK con cmake e make.
